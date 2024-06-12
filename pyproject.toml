@@ -20,6 +20,9 @@ smart-open = "6.2.0"
 superjson = "1.0.2"
 pysecret = "2.2.4"
 jinja2 = "3.0.3"
+pynamodb = "6.0.0"
+pynamodb_mate = "6.0.0.3"
+simple_aws_ec2 = "0.6.2"
 
 
 [tool.poetry.dev-dependencies]

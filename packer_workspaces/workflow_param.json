@@ -1,0 +1,24 @@
+// read :class:`acore_ami.workspace.WorkflowParam` for more details
+{
+    "workflow_id": "2024-06-12",
+    "aws_profile": "bmt_app_dev_us_east_1",
+    "vpc_name": "aws_landing_zone-dev-vpc",
+    "is_default_vpc": "false", // please use string
+    "subnet_name":  "aws_landing_zone-dev/public/1",
+    "security_group_name": "aws_landing_zone-dev/sg/allow-restricted-traffic-from-authorized-ip",
+    "ec2_iam_role_name":  "ec2-admin-role",
+    "root_base_ami_name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*",
+    "root_base_ami_owner_account_id": "099720109477",
+    "aws_tags": {
+        "tech:project_name": "acore_ami",
+        "tech:env_name": "devops",
+        "tech:version": "v1",
+        "tech:human_creator": "Sanhe Hu",
+        "tech:machine_creator": "packer",
+        "auto:delete_at": "na",
+        "bus:ou": "app",
+        "bus:team": "app",
+        "bus:project": "acore_ami",
+        "bus:owner": "Sanhe Hu"
+    }
+}

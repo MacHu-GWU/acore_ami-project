@@ -1507,6 +1507,44 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pynamodb"
+version = "6.0.0"
+description = "A Pythonic Interface to DynamoDB"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pynamodb-6.0.0-py3-none-any.whl", hash = "sha256:7217f87b6e5c9866d915265fd462fa4a012b37b0149bf1f814b33100b50e901f"},
+    {file = "pynamodb-6.0.0.tar.gz", hash = "sha256:05b3aa02021050393e0667944a20af3da60f55984de86126786844c2d47b9a18"},
+]
+
+[package.dependencies]
+botocore = ">=1.12.54"
+typing-extensions = {version = ">=4", markers = "python_version < \"3.11\""}
+
+[package.extras]
+signals = ["blinker (>=1.3,<2.0)"]
+
+[[package]]
+name = "pynamodb-mate"
+version = "6.0.0.3"
+description = "Provide Additional Features for pynamodb."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pynamodb_mate-6.0.0.3-py3-none-any.whl", hash = "sha256:545afaa182d60afa3a0d3b645d18bfc8264260c8e0ef13d892ebe321d2e0561a"},
+    {file = "pynamodb_mate-6.0.0.3.tar.gz", hash = "sha256:95d4f288e7f20304df4a61d521ad0d23355c332da41916eaafa4afbda831e38e"},
+]
+
+[package.dependencies]
+iterproxy = ">=0.3.1,<1.0.0"
+pynamodb = ">=6.0.0,<7.0.0"
+
+[package.extras]
+docs = ["Sphinx (==5.3.0)", "docfly (==2.0.3)", "furo (==2023.03.27)", "ipykernel (==6.28.0)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pycryptodome (>=3.18.0,<4.0.0)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
+encrypt = ["pycryptodome (>=3.18.0,<4.0.0)"]
+tests = ["boto-session-manager (>=1.7.2,<2.0.0)", "boto3", "moto (>=4.1.12,<5.0.0)", "moto[dynamodb,s3] (>=4.1.12,<5.0.0)", "pycryptodome (>=3.18.0,<4.0.0)", "pytest", "pytest-cov", "s3pathlib (>=2.1.2,<3.0.0)"]
+
+[[package]]
 name = "pysecret"
 version = "2.2.4"
 description = "utility tool that load secret information safely."
@@ -1996,6 +2034,25 @@ files = [
 [package.dependencies]
 cryptography = ">=2.0"
 jeepney = ">=0.6"
+
+[[package]]
+name = "simple-aws-ec2"
+version = "0.6.2"
+description = "Simple AWS EC2 devtool."
+optional = false
+python-versions = "*"
+files = [
+    {file = "simple_aws_ec2-0.6.2-py2.py3-none-any.whl", hash = "sha256:41a278df53b3dddab77b4706a77948fd37e258cfd0d4d1d9857df4a57bc3d89b"},
+    {file = "simple_aws_ec2-0.6.2.tar.gz", hash = "sha256:b8a3229d7492834b0dbac9713ee4a807e5bf52cd4d8620a4cd009dd15993dd9b"},
+]
+
+[package.dependencies]
+func-args = ">=0.1.1,<2.0.0"
+iterproxy = ">=0.2.1,<2.0.0"
+
+[package.extras]
+docs = ["docfly (==1.0.2)", "furo (==2021.8.31)", "rstobj (==0.0.7)", "sphinx (==4.3.0)", "sphinx-copybutton (==0.4.0)", "sphinx-inline-tabs (==2021.8.17b10)", "sphinx-jinja (==1.1.1)"]
+tests = ["boto-session-manager (>=1.3.1,<2.0.0)", "moto", "pytest", "pytest-cov", "rich"]
 
 [[package]]
 name = "six"
@@ -2489,4 +2546,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "605486673b1f5c03a6d3342282bb9529a7ac06f8bb4418a6137dc28a2505fcd7"
+content-hash = "9f9390fa9d946b6fb6045c2dd072fecb44bc987b80b7c4ddaa332c4dea274613"

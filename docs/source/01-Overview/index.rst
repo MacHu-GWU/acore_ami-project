@@ -14,6 +14,13 @@ Choose the Base Image
 
 在 AWS 的 AMI Catalog (清单) 上我们可以看到 Ubuntu 官方给出的 AMI Name 遵循着这样的规则 ``ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-YYMMDD``, 其中 ``focal`` 是 Ubuntu 20.X 的版本名称, 而 ``YYMMDD`` 是发布日期, 例如 ``20230207``. 所以我们选择这个 AMI 作为我们的 root base AMI.
 
+.. note::
+
+    ``ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-YYMMDD`` Details
+
+    - python: 3.8
+
+
 
 AMI Building Order
 ------------------------------------------------------------------------------
