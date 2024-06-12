@@ -9,13 +9,13 @@
 .. image:: https://codecov.io/gh/MacHu-GWU/acore_ami-project/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/MacHu-GWU/acore_ami-project
 
-.. image:: https://img.shields.io/pypi/v/acore-ami.svg
+.. .. image:: https://img.shields.io/pypi/v/acore-ami.svg
     :target: https://pypi.python.org/pypi/acore-ami
 
-.. image:: https://img.shields.io/pypi/l/acore-ami.svg
+.. .. image:: https://img.shields.io/pypi/l/acore-ami.svg
     :target: https://pypi.python.org/pypi/acore-ami
 
-.. image:: https://img.shields.io/pypi/pyversions/acore-ami.svg
+.. .. image:: https://img.shields.io/pypi/pyversions/acore-ami.svg
     :target: https://pypi.python.org/pypi/acore-ami
 
 .. image:: https://img.shields.io/badge/Release_History!--None.svg?style=social
@@ -50,22 +50,4 @@
 
 Welcome to ``acore_ami`` Documentation
 ==============================================================================
-Documentation for ``acore_ami``.
-
-
-.. _install:
-
-Install
-------------------------------------------------------------------------------
-
-``acore_ami`` is released on PyPI, so all you need is to:
-
-.. code-block:: console
-
-    $ pip install acore-ami
-
-To upgrade to latest version:
-
-.. code-block:: console
-
-    $ pip install --upgrade acore-ami
+这个项目用于实现 `azerothcore-wotlk <https://github.com/azerothcore/azerothcore-wotlk>`_ 游戏服务器的 Amazon Machine Image (AMI) 的自动化构建. 它提供了一系列 Python 实现的自动化脚本, 能够使用 `hashicorp packer <https://www.packer.io/>`_ 来自动化构建 AMI. 并且它还提供了一系列维护 AMI Inventory 的小工具.
