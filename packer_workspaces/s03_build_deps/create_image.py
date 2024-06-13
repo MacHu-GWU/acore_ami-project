@@ -13,10 +13,9 @@ import acore_ami.api as acore_ami
 
 # ------------------------------------------------------------------------------
 # NOTE: update these value before you run this script
-instance_id = "i-0f65b9c69fd65142e"
-mysql_version = "8.0.28"
-previous_step_id = acore_ami.StepIdEnum.pyenv.value
-this_step_id = acore_ami.StepIdEnum.mysql.value
+instance_id = "i-0b3f839d14fe43b0e"
+previous_step_id = acore_ami.StepIdEnum.mysql.value
+this_step_id = acore_ami.StepIdEnum.build_deps.value
 # ------------------------------------------------------------------------------
 
 dir_here = Path.dir_here(__file__)
@@ -33,7 +32,7 @@ if instance_status != "stopped":
 
 new_image_name = (
     "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server"
-    f"/{this_step_id}-{workflow_param.workflow_id}"
+    f"/{acore_ami.StepIdEnum.build_deps}-{workflow_param.workflow_id}"
 )
 
 
@@ -77,9 +76,7 @@ def create_dynamodb_item():
             base_ami_name=base_image.ami_name,
             root_base_ami_id=workflow_param.root_base_ami_id,
             root_base_ami_name=workflow_param.root_base_ami_name,
-            metadata={
-                "description": f"ubuntu20 with mysql {mysql_version}",
-            },
+            metadata={"description": "ubuntu20 with build dependences pre-installed."},
         )
 
 

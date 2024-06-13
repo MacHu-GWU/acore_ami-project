@@ -27,10 +27,16 @@ aws_cli_config.set_profile_as_default(workflow_param.aws_profile)
 
 # initialize your step parameter object with values
 # you may read sensitive data from external store, such as AWS SSM Parameter Store
-this_step_id = acore_ami.StepIdEnum.pyenv.value
+image = acore_ami.AmiData.get_one_or_none(
+    workflow_param.workflow_id,
+    acore_ami.StepIdEnum.mysql.value,
+)
+source_ami_id = image.ami_id
+
+this_step_id = acore_ami.StepIdEnum.build_deps.value
 step_param = acore_ami.StepParam(
     step_id=this_step_id,
-    source_ami_id=workflow_param.root_base_ami_id,
+    source_ami_id=source_ami_id,
     output_ami_name=(
         "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server"
         f"/{this_step_id}-{workflow_param.workflow_id}"
@@ -46,42 +52,37 @@ ws.run_packer_build_workflow(
     render=True,
     clean_up=True,
     validate=True,
-    dry_run=True,  # True = NOTHING happen, False = run packer build
+    dry_run=False,  # True = NOTHING happen, False = run packer build
 )
 
 # ------------------------------------------------------------------------------
 # Tag newly created AMI
 # ------------------------------------------------------------------------------
-tags = {
-    "Name": step_param.output_ami_name,
-}
-tags.update(workflow_param.aws_tags)
-ami_id = acore_ami.tag_image(
-    ec2_client=bsm.ec2_client,
-    image_name=step_param.output_ami_name,
-    tags=tags,
-)
-
-# ------------------------------------------------------------------------------
-# Create DynamoDB item for the new image
-# ------------------------------------------------------------------------------
-with bsm.awscli():
-    pm.Connection()
-    acore_ami.AmiData.create_table(wait=True)
-    new_image = acore_ami.create_dynamodb_item_for_new_image(
-        ec2_client=bsm.ec2_client,
-        aws_region=bsm.aws_region,
-        workflow_id=workflow_param.workflow_id,
-        step_id=step_param.step_id,
-        new_ami_name=step_param.output_ami_name,
-        base_ami_id=workflow_param.root_base_ami_id,
-        base_ami_name=workflow_param.root_base_ami_name,
-        root_base_ami_id=workflow_param.root_base_ami_id,
-        root_base_ami_name=workflow_param.root_base_ami_name,
-        metadata={
-            "description": (
-                "ubuntu20 with curl, wget, git, unzip, screen, "
-                "and python3.10, virtualenv, poetry, awscli, boto3, boto_session_manager, s3pathlib, fire, rich pre-installed"
-            ),
-        },
-    )
+# tags = {
+#     "Name": step_param.output_ami_name,
+# }
+# tags.update(workflow_param.aws_tags)
+# ami_id = acore_ami.tag_image(
+#     ec2_client=bsm.ec2_client,
+#     image_name=step_param.output_ami_name,
+#     tags=tags,
+# )
+#
+# # ------------------------------------------------------------------------------
+# # Create DynamoDB item for the new image
+# # ------------------------------------------------------------------------------
+# with bsm.awscli():
+#     pm.Connection()
+#     acore_ami.AmiData.create_table(wait=True)
+#     new_image = acore_ami.create_dynamodb_item_for_new_image(
+#         ec2_client=bsm.ec2_client,
+#         aws_region=bsm.aws_region,
+#         workflow_id=workflow_param.workflow_id,
+#         step_id="example",
+#         new_ami_name=step_param.output_ami_name,
+#         base_ami_id=workflow_param.root_base_ami_id,
+#         base_ami_name=workflow_param.root_base_ami_name,
+#         root_base_ami_id=workflow_param.root_base_ami_id,
+#         root_base_ami_name=workflow_param.root_base_ami_name,
+#         metadata={"key": "value"},
+#     )
