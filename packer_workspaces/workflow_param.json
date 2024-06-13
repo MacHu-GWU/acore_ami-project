@@ -1,6 +1,6 @@
 // read :class:`acore_ami.workspace.WorkflowParam` for more details
 {
-    "workflow_id": "2024-06-12",
+    "workflow_id": "2024-06-13-00-00-00",
     "aws_profile": "bmt_app_dev_us_east_1",
     "vpc_name": "aws_landing_zone-dev-vpc",
     "is_default_vpc": "false", // please use string

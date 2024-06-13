@@ -16,6 +16,8 @@ Packer Build Automation
 这里我重点说一下 #1 和 #3.
 
 
+.. _prepare-packer-templates:
+
 Prepare Packer Templates
 ------------------------------------------------------------------------------
 `Packer 原生的 Template <https://developer.hashicorp.com/packer/docs/templates/hcl_templates>`_ 本质上相当于一个 declaration (声明式) 的脚本. 这有点类似于 CloudFormation, 它不是面像过程, 而是声明式的. 但是它有着声明式脚本的通用缺点, 自动化程度不高, 参数化系统不够灵活, 你无法基于 parameter 来用 if else, for loop 等对整个 template 的结构进行控制. 所以我在 Template 上又用 `jinja2 <https://jinja.palletsprojects.com/en/3.1.x/>`_ 模板引擎封装了一层 (这跟我初期改进 CloudFormation 流程的做法类似). 具体来说整个开发流程是这样的:
@@ -32,9 +34,91 @@ Prepare Packer Templates
 
 在编写 ``*.pkr.hcl`` 的时候, 所以直接被 pass 到 template 中的参数 (例如 string replacement) 都需要在 ``*.variables.pkr.hcl`` 中定义. 这样能充分利用 packer 的 declaration 语法记录每个 variable 是用来干什么的. 而如果是用来操作 template 结构的参数我们就不要放在 ``*.variables.pkr.hcl`` 中了. 我认为不应该用 jinja2 template 来完全替代 packer 的 variables 系统, 因为 jinja2 主要是一个 string template engine, 插入值的时候并不会检查类型, 所以我们只用 jinja2 来做 string manipulation, if/else, for loop.
 
-.. dropdown:: .py
 
-    ... 这里放几个例子.
+Packer Build Development Tutorial
+------------------------------------------------------------------------------
+这一节详细介绍了在这个项目里, 我们是如何开发一个 packer build 脚本的.
+
+**Workflow**
+
+在这个 Repo 的根目录下有一个 `packer_workspace <https://github.com/MacHu-GWU/acore_ami-project/tree/main/packer_workspaces>`_ 目录. 里面包含一个 ``workflow_param.json`` 和一堆文件夹. 里面的目录结构大致长下面这样. 如果你还记得 :ref:`ami-manifest` 中提到的我们将一个 AMI 的多个步骤拆分的策略, 这里的每个子目录就是一个 Step, 多个 Step 合在一起就组成了一个 Workflow. 例如 `example <https://github.com/MacHu-GWU/acore_ami-project/tree/main/packer_workspaces/example>`_ 就是一个作为所有 step 的 workspace 的例子而存在的 Step. 这个 example 跟我们的 wotlk 项目并没有关系, 但是所有有关系的 step 都是用这个 example 作为模板来创建的.
+
+这些 Step 的 packer template 中都会有很多 parameter, 而这里很多 Step 的 parameter 都是一样的. 而 `/packer_workspaces/workflow_param.json <https://github.com/MacHu-GWU/acore_ami-project/blob/main/packer_workspaces/workflow_param.json>`_ 就保存了这些通用的 parameter 的值.
+
+.. code-block::
+
+    /packer_workspaces/
+    /packer_workspaces/workflow_param.json
+    /packer_workspaces/{step1_workspace}/
+    /packer_workspaces/{step2_workspace}/
+    /packer_workspaces/.../
+
+.. dropdown:: workflow_param.json
+
+    .. literalinclude:: ../../../packer_workspaces/workflow_param.json
+       :language: javascript
+       :linenos:
+
+**Step**
+
+下面我们进到一个具体的 Step 里面看看每个 Step 的 packer template 应该怎么写.
+
+下面给除了每个 Step 的 workspace 的目录结构.
+
+.. code-block::
+
+    /workspace/
+    /workspace/templates
+    /workspace/templates/.pkr.hcl
+    /workspace/templates/.pkrvars.hcl
+    /workspace/templates/.variables.pkr.hcl
+    /workspace/.gitignore
+    /workspace/${workflow_name}.pkr.hcl
+    /workspace/${workflow_name}.pkrvars.hcl
+    /workspace/${workflow_name}.variables.pkr.hcl
+    /workspace/complicated_script.py
+    /workspace/complicated_script.sh
+    /workspace/packer_build.py # <--- 用这个脚本运行 packer build
+    /workspace/param.json
+    /workspace/README.rst
+
+下面列出了里面比较关键的几个文件:
+
+``.pkr.hcl``: packer template 的主脚本, 定义了 packer build 的逻辑. 这就是我们在 :ref:`prepare-packer-templates` 中提到的 jinja2 模板.
+
+.. dropdown:: .pkr.hcl
+
+    .. literalinclude:: ../../../packer_workspaces/example/templates/.pkr.hcl
+       :language: hcl
+       :linenos:
+
+``.pkrvars.hcl``: packer variables 的值. packer build 的时候会从这里面读数据.
+
+.. dropdown:: .pkrvars.hcl
+
+    .. literalinclude:: ../../../packer_workspaces/example/templates/.pkrvars.hcl
+       :language: hcl
+       :linenos:
+
+``.variables.pkr.hcl``: packer variables 的声明文件. 注意这里只是定义, 而不包含 value. (see https://developer.hashicorp.com/packer/guides/hcl/variables for more information)
+
+.. dropdown:: .variables.pkr.hcl
+
+    .. literalinclude:: ../../../packer_workspaces/example/templates/.variables.pkr.hcl
+       :language: hcl
+       :linenos:
+
+``packer_build.py`` 这是一个 Python 脚本, 用来运行 packer build. **也是我们的核心脚本**. 这个脚本的主要流程是:
+
+1. 读取 :class:`~acore_ami.workspace.Workspace.WorkflowParam`
+2. 读取 :class:`~acore_ami.workspace.Workspace.StepParam`
+3. 执行 packer build, 包括用 jinja2 render 最终的 packer template, 运行 ``packer validate`` 以及最终运行 ``packer build``, 这些逻辑被 :meth:`acore_ami.workspace.Workspace.run_packer_build_workflow` 方法封装在一起了.
+
+.. dropdown:: packer_build.py
+
+    .. literalinclude:: ../../../packer_workspaces/example/templates/packer_build.py
+       :language: hcl
+       :linenos:
 
 
 Manage AMIs

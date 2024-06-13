@@ -37,12 +37,13 @@ source "amazon-ebs" "ubuntu20" {
   # if none default VPC, you need to explicitly set this to true
   associate_public_ip_address = true
 
-  vpc_filter {
-    filters = {
-      "tag:Name": var.vpc_name,
-      "isDefault": var.is_default_vpc,
-    }
-  }
+  # you don't have to set the VPC explicitly if you specified the subnet.
+#  vpc_filter {
+#    filters = {
+#      "tag:Name": var.vpc_name,
+#      "isDefault": var.is_default_vpc,
+#    }
+#  }
 
   # make sure you are using a public subnet
   subnet_filter {
