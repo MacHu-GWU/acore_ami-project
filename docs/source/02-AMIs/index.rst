@@ -63,7 +63,7 @@ Packer Build Development Tutorial
 
 下面我们进到一个具体的 Step 里面看看每个 Step 的 packer template 应该怎么写.
 
-下面给除了每个 Step 的 workspace 的目录结构.
+下面列出了每个 Step 的 workspace 的目录结构.
 
 .. code-block::
 
@@ -84,7 +84,7 @@ Packer Build Development Tutorial
 
 下面列出了里面比较关键的几个文件:
 
-``.pkr.hcl``: packer template 的主脚本, 定义了 packer build 的逻辑. 这就是我们在 :ref:`prepare-packer-templates` 中提到的 jinja2 模板.
+``.pkr.hcl``: packer template 的主脚本, 定义了 packer build 的逻辑. 这就是我们在 :ref:`prepare-packer-templates` 中提到的 jinja2 模板. 我建议你仔细看看这个文件中的注释, 了解对于不同 provision 的需求, 应该使用什么 packer 命令. 例如如果 provision 的逻辑非常复杂且有许多 Python 依赖, 这里的 ``complicated_script.sh`` 就是一个非常好的例子. 我建议你去 `example <https://github.com/MacHu-GWU/acore_ami-project/tree/main/packer_workspaces/example>`_ 目录下具体看看这个例子.
 
 .. dropdown:: .pkr.hcl
 
@@ -110,14 +110,18 @@ Packer Build Development Tutorial
 
 ``packer_build.py`` 这是一个 Python 脚本, 用来运行 packer build. **也是我们的核心脚本**. 这个脚本的主要流程是:
 
-1. 读取 :class:`~acore_ami.workspace.Workspace.WorkflowParam`
-2. 读取 :class:`~acore_ami.workspace.Workspace.StepParam`
+1. 读取 :class:`~acore_ami.workspace.WorkflowParam`
+2. 读取 :class:`~acore_ami.workspace.StepParam`
 3. 执行 packer build, 包括用 jinja2 render 最终的 packer template, 运行 ``packer validate`` 以及最终运行 ``packer build``, 这些逻辑被 :meth:`acore_ami.workspace.Workspace.run_packer_build_workflow` 方法封装在一起了.
+4. 给 AMI 打上 aws tags, 便于管理.
+5. 在 DynamoDB 中创建一条记录, 用来记录这个 AMI 的 metadata, 也方便以后进行查询和管理.
+
+我建议你仔细 ``packer_build.py`` 源码中的注释来了解这个脚本的逻辑.
 
 .. dropdown:: packer_build.py
 
-    .. literalinclude:: ../../../packer_workspaces/example/templates/packer_build.py
-       :language: hcl
+    .. literalinclude:: ../../../packer_workspaces/example/packer_build.py
+       :language: python
        :linenos:
 
 

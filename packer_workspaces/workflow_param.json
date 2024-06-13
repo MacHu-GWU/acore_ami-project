@@ -6,9 +6,9 @@
     "is_default_vpc": "false", // please use string
     "subnet_name":  "aws_landing_zone-dev/public/1",
     "security_group_name": "aws_landing_zone-dev/sg/allow-restricted-traffic-from-authorized-ip",
-    "ec2_iam_role_name":  "ec2-admin-role",
-    "root_base_ami_name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*",
-    "root_base_ami_owner_account_id": "099720109477",
+    "ec2_iam_role_name": "ec2-admin-role",
+    "root_base_ami_id": "ami-0e1fd4ed3e0403447",
+    "root_base_ami_name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20240610",
     "aws_tags": {
         "tech:project_name": "acore_ami",
         "tech:env_name": "devops",

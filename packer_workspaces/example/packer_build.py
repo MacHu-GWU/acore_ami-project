@@ -24,21 +24,13 @@ workflow_param = acore_ami.WorkflowParam.from_json_file(path_workflow_param)
 bsm = BotoSesManager(profile_name=workflow_param.aws_profile)
 aws_cli_config = awscli_mate.AWSCliConfig()
 aws_cli_config.set_profile_as_default(workflow_param.aws_profile)
-# locate the latest root base ami, this is my own implementation of the
-# packer's source_ami_filter feature, for better control
-images = acore_ami.find_root_base_ami(
-    ec2_client=bsm.ec2_client,
-    source_ami_name=workflow_param.root_base_ami_name,
-    source_ami_owner_account_id=workflow_param.root_base_ami_owner_account_id,
-)
-latest_root_base_ami = images[0]
 
 # initialize your step parameter object with values
 # you may read sensitive data from external store, such as AWS SSM Parameter Store
 step_param = acore_ami.StepParam(
     step_id="example",
-    source_ami_id=latest_root_base_ami.id,
-    output_ami_name="aws-ami-with-packer-example-{}".format("2024-06-12-15-00-00"),
+    source_ami_id=workflow_param.root_base_ami_id,
+    output_ami_name=f"aws-ami-with-packer-example-{workflow_param.workflow_id}",
 )
 
 # ------------------------------------------------------------------------------
@@ -78,9 +70,9 @@ with bsm.awscli():
         workflow_id=workflow_param.workflow_id,
         step_id="example",
         new_ami_name=step_param.output_ami_name,
-        base_ami_id=latest_root_base_ami.id,
-        base_ami_name=latest_root_base_ami.name,
-        root_base_ami_id=latest_root_base_ami.id,
-        root_base_ami_name=latest_root_base_ami.name,
+        base_ami_id=workflow_param.root_base_ami_id,
+        base_ami_name=workflow_param.root_base_ami_name,
+        root_base_ami_id=workflow_param.root_base_ami_id,
+        root_base_ami_name=workflow_param.root_base_ami_name,
         metadata={"key": "value"},
     )

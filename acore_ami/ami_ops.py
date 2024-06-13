@@ -47,6 +47,8 @@ def find_root_base_ami(
             # we use x86_64 only in this project
             dict(Name="architecture", Values=["x86_64"]),
             dict(Name="state", Values=["available"]),
+            dict(Name="root-device-type", Values=["ebs"]),
+            dict(Name="virtualization-type", Values=["hvm"]),
         ],
     )
     images = list()

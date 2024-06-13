@@ -51,8 +51,8 @@ class WorkflowParam(BaseParam):
     subnet_name: str = dataclasses.field()
     security_group_name: str = dataclasses.field()
     ec2_iam_role_name: str = dataclasses.field()
+    root_base_ami_id: str = dataclasses.field()
     root_base_ami_name: str = dataclasses.field()
-    root_base_ami_owner_account_id: str = dataclasses.field()
 
     @cached_property
     def aws_region(self) -> str:
