@@ -8,8 +8,8 @@ from boto_session_manager import BotoSesManager
 import acore_ami.api as acore_ami
 
 # set the previous and this step id
-previous_step_id = acore_ami.StepIdEnum.mysql.value
-this_step_id = acore_ami.StepIdEnum.build_deps.value
+previous_step_id = acore_ami.StepIdEnum.build_deps.value
+this_step_id = acore_ami.StepIdEnum.server_data.value
 
 dir_here = Path.dir_here(__file__)
 
