@@ -3,6 +3,6 @@
 from .vendor.nested_logger import NestedLogger
 
 logger = NestedLogger(
-    name="acore_ami",
+    name="packer4ami",
     log_format="%(message)s",
 )

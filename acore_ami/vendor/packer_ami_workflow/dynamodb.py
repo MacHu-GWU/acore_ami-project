@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
+"""
+DynamoDB ORM layer.
+"""
+
 import typing as T
 import dataclasses
-import enum
 import pynamodb_mate.api as pm
 
 
-class StepIdEnum(str, enum.Enum):
-    pyenv = "pyenv"
-    mysql = "mysql"
-    build_deps = "build_deps"
-    server_data = "server_data"
-    built_core = "built_core"
-
-
 class StepIdIndex(pm.GlobalSecondaryIndex):
+    """
+    Step Id lookup Global secondary index.
+    """
+
     class Meta:
         index_name = "step_id_index"
         projection = pm.AllProjection()
@@ -23,39 +22,15 @@ class StepIdIndex(pm.GlobalSecondaryIndex):
     create_at = pm.UTCDateTimeAttribute(range_key=True)
 
 
-@dataclasses.dataclass
-class Metadata:
-    """
-    User custom metadata.
-    """
-
-    azerothcore_wotlk_commit_id: str = dataclasses.field(default=None)
-
-    def to_dict(self) -> T.Dict[str, T.Any]:
-        data = dataclasses.asdict(self)
-        return {k: v for k, v in data.items() if v is not None}
-
-    @classmethod
-    def from_dict(cls, dct: T.Dict[str, T.Any]):
-        return cls(**dct)
-
-
 class AmiData(pm.Model):
     """
-    This is the model class for the DynamoDB table `acore_ami_catalog`.
-
-    I usually rebuild the AMI every month. And in each month, I may go through
-    step 1, 2, 3, ... all the way to the end, or may start from 3, 4, 5.
-    The workflow id is a unique identifier for each month's AMI building process.
-    For example, on 2024-01-01, I rebuild the AMI for step 1, 2, 3, 4, 5.
-    Then the workflow id is "2024-01-01". And the step id is "pyenv", "mysql",
-    "build_deps", "server_data", "built_core".
+    This is the model class for the DynamoDB table for storing AMI metadata.
 
     :param workflow_id:
     :param step_id:
-    :param ami_id:
-    :param ami_name:
-    :param create_at:
+    :param ami_id: the AMI id.
+    :param ami_name: the AMI name.
+    :param create_at: when this AMI is created.
     :param aws_console_url: AWS console url to open the AMI details in the browser.
     :param base_ami_id: this AMI is built on top of which base AMI?
     :param base_ami_name: name of the base AMI.
@@ -67,13 +42,6 @@ class AmiData(pm.Model):
         API call.
     :param metadata: user custom metadata
     """
-
-    class Meta:
-        # since the AMI is immutable artifacts, there's only one environment for AMI
-        # we don't use sbx, tst, prd environment
-        table_name = "acore_ami_catalog"
-        region = "us-east-1"
-        billing_mode = pm.constants.PAY_PER_REQUEST_BILLING_MODE
 
     workflow_id = pm.UnicodeAttribute(hash_key=True)
     step_id = pm.UnicodeAttribute(range_key=True)
@@ -88,12 +56,47 @@ class AmiData(pm.Model):
     details = pm.JSONAttribute()
     metadata = pm.JSONAttribute()
 
+    step_id_index = StepIdIndex()
+
+    @classmethod
+    def get_image(cls, workflow_id: str, step_id: str):
+        """
+        Get the AMI data details.
+
+        :param workflow_id: the workflow id.
+        :param step_id: the step id.
+        """
+        return cls.get_one_or_none(workflow_id, step_id)
+
     @classmethod
     def query_by_workflow(cls, workflow_id: str):
+        """
+        Get all AMI (steps) data for a specific workflow.
+
+        :param workflow_id: the workflow id.
+        """
         return list(
             sorted(
                 cls.query(hash_key=workflow_id),
                 key=lambda x: x.create_at,
-                reverse=False,
+                reverse=True,
             )
         )
+
+    @classmethod
+    def query_by_step_id(cls, step_id: str):
+        """
+        Get all AMI versions (from different workflow) for a specific step.
+
+        :param step_id: the step id.
+        """
+        return list(
+            sorted(
+                cls.step_id_index.query(hash_key=step_id),
+                key=lambda x: x.create_at,
+                reverse=True,
+            )
+        )
+
+
+T_AMI_DATA = T.TypeVar("T_AMI_DATA", bound=AmiData)

@@ -1,0 +1,7 @@
+{
+    "step_id": "pyenv",
+    "previous_step_id": null,
+    "metadata": {
+        "description": "ubuntu22 with curl, wget, git, unzip, screen, and python3.11, virtualenv, poetry, awscli, boto3, boto_session_manager, s3pathlib, fire, rich pre-installed"
+    }
+}

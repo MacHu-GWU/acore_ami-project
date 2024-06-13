@@ -21,30 +21,23 @@ The format for the parameter is:
 - VOL_TYPE: ebs-gp3 (for >=23.10), ebs-gp2 (for <=23.04), ebs-io1, ebs-standard, or instance-store
 """
 
-from pathlib_mate import Path
-import awscli_mate.api as awscli_mate
 from boto_session_manager import BotoSesManager
 from rich import print as rprint
 
-import acore_ami.api as acore_ami
+import acore_ami.vendor.packer_ami_workflow.api as paw
 
 # ------------------------------------------------------------------------------
 # 根据 ubuntu 的版本, 以及 arch (AMD64 还是 ARM) 来找到合适的 root base ami
 # 其中 owner_account_id 来自于本脚本最前面的 reference 文档
-root_base_ami_name = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
-root_base_ami_owner_account_id =  "099720109477"
+aws_profile = "bmt_app_dev_us_east_1"
+root_base_ami_name = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
+root_base_ami_owner_account_id = "099720109477"
 # ------------------------------------------------------------------------------
-dir_here = Path.dir_here(__file__)
-path_workflow_param = dir_here.joinpath("workflow_param.json")
-workflow_param = acore_ami.WorkflowParam.from_json_file(path_workflow_param)
-
-bsm = BotoSesManager(profile_name=workflow_param.aws_profile)
-aws_cli_config = awscli_mate.AWSCliConfig()
-aws_cli_config.set_profile_as_default(workflow_param.aws_profile)
+bsm = BotoSesManager(profile_name=aws_profile)
 
 # locate the latest root base ami, this is my own implementation of the
 # packer's source_ami_filter feature, for better control
-images = acore_ami.find_root_base_ami(
+images = paw.find_root_base_ami(
     ec2_client=bsm.ec2_client,
     source_ami_name=root_base_ami_name,
     source_ami_owner_account_id=root_base_ami_owner_account_id,
@@ -54,8 +47,11 @@ ami_catalog_url = (
     f"https://{bsm.aws_region}.console.aws.amazon.com/ec2"
     f"/home?region={bsm.aws_region}#AMICatalog:"
 )
-print("Roob base AMI details:")
+print("Root base AMI details:")
 rprint(latest_root_base_ami)
 print(f"Root base AMI id = {latest_root_base_ami.id}")
 print(f"Root base AMI name = {latest_root_base_ami.name}")
-print(f"Enter the AMI id in ami catalog url to see the details (in Community AMIs tab): {ami_catalog_url}")
+print(
+    f"Enter the AMI id in ami catalog url to see the details "
+    f"(in Community AMIs tab): {ami_catalog_url}"
+)
