@@ -1,9 +1,6 @@
 Step2 - Install MySQL
 ==============================================================================
-Read https://acore-ami.readthedocs.io/en/latest/search.html?q=Step2+Install+MySQL&check_keywords=yes&area=default for details.
-
-MySQL
-==============================================================================
+See source code at `workflow/s02-mysql/ <https://github.com/MacHu-GWU/acore_ami-project/blob/main/workflow/s02-mysql>`_.
 
 
 Overview

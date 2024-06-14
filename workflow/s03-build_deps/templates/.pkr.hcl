@@ -7,9 +7,9 @@ packer {
   }
 }
 
-source "amazon-ebs" "ubuntu20" {
+source "amazon-ebs" "ubuntu" {
   ami_name      = var.output_ami_name
-  instance_type = "t3.large"
+  instance_type = "t3.2xlarge"
   region        = var.aws_region
   ssh_username  = "ubuntu"
 
@@ -44,24 +44,26 @@ source "amazon-ebs" "ubuntu20" {
 build {
   name    = "install build dependencies"
   sources = [
-    "source.amazon-ebs.ubuntu20"
+    "source.amazon-ebs.ubuntu"
   ]
 
+  # see more details at https://www.azerothcore.org/wiki/linux-requirements
   provisioner "shell" {
     inline = [
       # wait until the machine fully boots up
       "sleep 10",
+      "sudo apt-get update -y",
       # note, we don't install MySQL via apt-get, it is already installed in the previous AMI
-      "sudo apt-get update -y && sudo apt-get install git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y",
       # libboost-all-dev might have some dependencies issue, we can fix the dependencies and then install
-      "sudo apt --fix-broken install -y",
-      "sudo apt-get install libboost-all-dev -y",
+      "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
+      "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
       "lsb_release -a",
       "openssl version",
+      "dpkg -s libboost-dev | grep 'Version'",
       "clang --version",
       "cmake --version",
-      "mysql --version",
       "screen --version",
+      "mysql --version",
     ]
   }
 

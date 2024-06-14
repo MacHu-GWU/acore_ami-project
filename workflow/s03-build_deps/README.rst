@@ -1,0 +1,1 @@
+Read https://acore-ami.readthedocs.io/en/latest/search.html?q=Step3+Install+Azerothcore+Build+Dependencies&check_keywords=yes&area=default for details.

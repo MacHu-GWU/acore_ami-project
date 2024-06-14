@@ -23,13 +23,10 @@ build_deps_versions["openssl"] = response.stdout.decode("utf-8").strip()
 response = subprocess.run(["clang", "--version"], capture_output=True, check=True)
 build_deps_versions["clang"] = response.stdout.decode("utf-8").strip()
 
-response = subprocess.run(["mysql", "--version"], capture_output=True, check=True)
-build_deps_versions["mysql"] = response.stdout.decode("utf-8").strip()
-
 response = subprocess.run(["screen", "--version"], capture_output=True, check=True)
 build_deps_versions["screen"] = response.stdout.decode("utf-8").strip()
 
-response = subprocess.run(["clang", "--version"], capture_output=True, check=True)
-build_deps_versions["ubuntu"] = response.stdout.decode("utf-8").strip()
+response = subprocess.run(["mysql", "--version"], capture_output=True, check=True)
+build_deps_versions["mysql"] = response.stdout.decode("utf-8").strip()
 
 path_build_deps_versions_json.write_text(json.dumps(build_deps_versions, indent=4))
