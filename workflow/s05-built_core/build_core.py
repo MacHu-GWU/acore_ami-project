@@ -209,12 +209,16 @@ def build():
 
     print("---------- Step 4. Post Build")
     print("---------- Step 41. write metadata of the source code to a json file")
+    acore_commit_id = get_commit_id(dir_acore_repo)
+    mod_eluna_commit_id = get_commit_id(dir_mod_eluna_repo)
+    print(f"{acore_commit_id = }")
+    print(f"{mod_eluna_commit_id = }")
     metadata = {
         "azerothcore-wotlk": {
-            "commit_id": get_commit_id(dir_acore_repo),
+            "commit_id": acore_commit_id,
         },
         "mod-eluna": {
-            "commit_id": get_commit_id(dir_mod_eluna_repo),
+            "commit_id": mod_eluna_commit_id,
         },
     }
     print(f"metadata = {metadata}")

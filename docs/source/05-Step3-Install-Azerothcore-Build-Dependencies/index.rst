@@ -95,7 +95,7 @@ The total size of the installed dependencies is about 1GB. So we may use the def
 
 Build Time
 ------------------------------------------------------------------------------
-Build time is around 10 minutes on ``t3.2xlarge``.
+Build time is around 6 minutes on ``t3.2xlarge``.
 
 
 Reference

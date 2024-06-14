@@ -12,7 +12,7 @@ The total size of the server data is about 1.2GB (zipped) and 3.3GB (unzipped). 
 
 Build Time
 ------------------------------------------------------------------------------
-Build time is around 10 minutes on ``t3.2xlarge``.
+Build time is around 5 minutes on ``t3.2xlarge``.
 
 
 Reference

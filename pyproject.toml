@@ -22,7 +22,7 @@ pysecret = "2.2.4"
 jinja2 = "3.0.3"
 pynamodb = "6.0.0"
 pynamodb_mate = "6.0.0.3"
-simple_aws_ec2 = "0.6.2"
+simple_aws_ec2 = "0.7.2"
 
 
 [tool.poetry.dev-dependencies]

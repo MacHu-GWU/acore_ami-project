@@ -7,7 +7,7 @@ packer {
   }
 }
 
-source "amazon-ebs" "ubuntu20" {
+source "amazon-ebs" "ubuntu" {
   ami_name      = var.output_ami_name
   instance_type = "c5.9xlarge"
   region        = var.aws_region
@@ -57,7 +57,7 @@ source "amazon-ebs" "ubuntu20" {
 build {
   name    = "build azeroth core"
   sources = [
-    "source.amazon-ebs.ubuntu20"
+    "source.amazon-ebs.ubuntu"
   ]
 
   provisioner "shell" {
@@ -82,9 +82,15 @@ build {
   provisioner "shell" {
     inline = [
       # verify
+      "echo verify installation:",
+      "echo verify azeroth-server:",
       "ls ~/azeroth-server",
+      "echo verify azeroth-server/bin:",
       "ls ~/azeroth-server/bin",
+      "echo verify azeroth-server/etc:",
       "ls ~/azeroth-server/etc",
+      "echo verify azeroth-server/modules:",
+      "ls ~/azeroth-server/etc/modules",
     ]
   }
 }

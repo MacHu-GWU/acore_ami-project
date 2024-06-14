@@ -1,0 +1,7 @@
+{
+    "step_id": "built_core",
+    "previous_step_id": "server_data",
+    "metadata": {
+        "description": "ubuntu22 with azerothcore server core compiled."
+    }
+}
