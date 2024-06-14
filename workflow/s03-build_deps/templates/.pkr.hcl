@@ -58,12 +58,20 @@ build {
       # and then install again, that's why we run this command twice
       "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
       "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
+      # Print the versions of the installed dependencies
+      "echo check ubuntu version ...",
       "lsb_release -a",
+      "echo check openssl version ...",
       "openssl version",
+      "echo check boost version ...",
       "dpkg -s libboost-dev | grep 'Version'",
+      "echo check clang version ...",
       "clang --version",
+      "echo check cmake version ...",
       "cmake --version",
+      "echo check screen version ...",
       "screen --version",
+      "echo check mysql version ...",
       "mysql --version",
     ]
   }
