@@ -56,8 +56,8 @@ build {
       # note, we don't install MySQL via apt-get, it is already installed in the previous AMI
       # libboost-all-dev might have some dependencies issue, we can fix the dependencies by using "sudo apt --fix-broken install -y"
       # and then install again, that's why we run this command twice
-      "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
-      "sudo apt-get install git cmake make gcc g++ clang libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
+      "sudo apt-get install git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
+      "sudo apt-get install git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev -y || sudo apt --fix-broken install -y",
       # Print the versions of the installed dependencies
       "echo check ubuntu version ...",
       "lsb_release -a",

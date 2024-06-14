@@ -3,7 +3,7 @@
     :target: https://acore-ami.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-.. image:: https://github.com/MacHu-GWU/acore_ami-project/workflows/CI/badge.svg
+.. .. image:: https://github.com/MacHu-GWU/acore_ami-project/workflows/CI/badge.svg
     :target: https://github.com/MacHu-GWU/acore_ami-project/actions?query=workflow:CI
 
 .. image:: https://codecov.io/gh/MacHu-GWU/acore_ami-project/branch/main/graph/badge.svg

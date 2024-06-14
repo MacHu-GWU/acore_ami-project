@@ -417,6 +417,12 @@ class AmiBuilder:
         if new_image is None:
             raise ValueError(f"AMI {self.output_ami_name} not found.")
 
+        logger.info(f"delete AMI {new_image.id}")
+        for dct in new_image.data.get("BlockDeviceMappings", []):
+            snapshot_id = dct.get("Ebs", {}).get("SnapshotId")
+            if snapshot_id:
+                logger.info(f"delete Snapshot {snapshot_id}")
+
         new_image.deregister(
             ec2_client=self.workflow_param.bsm.ec2_client,
             delete_snapshot=delete_snapshot,
