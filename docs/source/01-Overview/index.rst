@@ -2,7 +2,7 @@ Overview
 ==============================================================================
 本章主要介绍了本项目相关的 AMI 的基本概览.
 
-- update at: 2023-03-35.
+- update at: 2024-06-14.
 
 
 Choose the Base Image
@@ -21,6 +21,25 @@ Choose the Base Image
     - Ubuntu 20.04 has Python3.8 pre-installed
 
 
+AMI Build Steps
+------------------------------------------------------------------------------
+本节列出了我们的 AMI 构建过程中的所有步骤:
+
+1. :ref:`pyenv <step1-pyenv>`: 在 Root Base Image 上安装了 pyenv 并且安装了 Python, 一些 Python 包, 以及一些常用工具.
+2. ``mysql``: 安装了某个具体的 MySQL 版本.
+3. ``build_deps``: 参考 `Azerothcore 的 Linux Requirement <https://www.azerothcore.org/wiki/linux-requirements>`_, 预安装了 build 服务器核心的所有编译工具, 其中包括 MySQL 服务器以及客户端.
+4. ``server_data``: 包含了从 `wowgaming GitHub <https://github.com/wowgaming/client-data/releases/>`_ 上下载下来的最新地图数据, 由于这个数据非常大, 并且更新频率不高. 而之后我们需要频繁的重新从最新的源码构建服务器, 如果每次都要包含地图数据, 那么创建 AMI (snapshot) 的时间就会变得很长, 所以我们预先将这一步的结果缓存下来.
+5. ``built_core``: 包含了已经从源码构建好的服务器核心, 但还没有对服务器进行配置.
+
+.. note::
+
+    这个项目使用了 `packer_ami_workflow <https://packer-ami-workflow.readthedocs.io/en/latest/>`_ 框架来实现自动化构建 AMI 的工作流程. 关于目录结构, 自动化脚本的详细说明, 请参考 ``packer_ami_workflow`` 的文档.
+
+
+Python Version
+------------------------------------------------------------------------------
+
+
 AMI Cost Optimization
 ------------------------------------------------------------------------------
 储存 AMI 本身是不花钱的, 但是 AMI 是构建与 EBS Snapshot 之上, 而 EBS 收费的. 具体费用可以查看 `EBS Pricing <https://aws.amazon.com/ebs/pricing/>`_, 写本文的时候的价格是 $0.05/GB Month.
@@ -33,33 +52,6 @@ AMI Cost Optimization
 其中地图文件是可以存在 S3 上, 然后在服务器运行的时候下载下来的, 没有必要塞在 AMI 里. 这里我们做一个简单的计算, 看看是存在 AMI 里还是存在 S3 上更划算.
 
 根据 `S3 Pricing <https://aws.amazon.com/s3/pricing/?p=pm&c=s3&z=4>`_, S3 存储是 $0.023/GB Month, 而将数据从 S3 下载到位于同一个 Region 的 EC2 上是不花钱的. 鉴于 S3 存储比 EBS Snapshot 的存储便宜, 所以存在 S3 上更划算. **但是我们的数据量并不大, 相比之下对我来说等待时间更重要, 所以我们选择将地图数据存在 AMI 里**.
-
-
-.. _workflow-and-step-strategy:
-
-Workflow and Step Strategy
-------------------------------------------------------------------------------
-.. important::
-
-    这部分是我们构建 AMI 的核心策略, 请仔细阅读.
-
-由于整个 AMI 构建过程包含很多步骤, 包括安装依赖, 下载数据, 编译游戏服务器. 如果我们将这些步骤放在一个 packer build 中进行, 那么构建时间也很长, 并且出错的概率就会很高, 一旦出错就需要从头再来, 会非常浪费时间, 也很难 debug. 所以比较工程化的做法是将其分拆成多个小步骤, 每个小步骤都会输出一个 AMI, 后一个步骤基于前一个步骤来进行构建. 这样我们可以用中间的 AMI 来创建 EC2 然后 SSH 进去 debug. 这样很容易对每一个步骤的逻辑进行检查和定位问题, 反馈速度也会比较快.
-
-我们的 packer 脚本就是根据这个策略来设计的. 我们定义:
-
-1. Workflow: 某天我们一次执行了多个构建步骤, 整个过程就是一个 Workflow. 一个 workflow 会有一个唯一的 ID, 通常我们使用日期时间作为 ID. 例如 ``2023-01-01-09-00-00``.
-2. Step: 在一个过程中每一次运行 packer build 生成一个过度 AMI 的活动就是一个 Step. Step id 是 semantic 的, 这个步骤要做什么就叫什么. 例如第一步是安装 pyenv, 那么这个步骤的 ID 就是 ``pyenv``. 总体来说, 越是更新频率低的部分我们就越先构建. 例如 Python Runtime 大概率我们是不需要重新构建的, 所以我们放在第一个 Step. 而服务器编译是要频繁更新的, 所以我们放在最后一步.
-
-
-AMI Build Steps
-------------------------------------------------------------------------------
-本节列出了我们的 AMI 构建过程中的所有步骤:
-
-1. ``pyenv``: 在 Root Base Image 上安装了 pyenv 并且安装了 Python, 一些 Python 包, 以及一些常用工具.
-2. ``mysql``: 安装了某个具体的 MySQL 版本.
-3. ``build_deps``: 参考 `Azerothcore 的 Linux Requirement <https://www.azerothcore.org/wiki/linux-requirements>`_, 预安装了 build 服务器核心的所有编译工具, 其中包括 MySQL 服务器以及客户端.
-4. ``server_data``: 包含了从 `wowgaming GitHub <https://github.com/wowgaming/client-data/releases/>`_ 上下载下来的最新地图数据, 由于这个数据非常大, 并且更新频率不高. 而之后我们需要频繁的重新从最新的源码构建服务器, 如果每次都要包含地图数据, 那么创建 AMI (snapshot) 的时间就会变得很长, 所以我们预先将这一步的结果缓存下来.
-5. ``built_core``: 包含了已经从源码构建好的服务器核心, 但还没有对服务器进行配置.
 
 
 MySQL Version

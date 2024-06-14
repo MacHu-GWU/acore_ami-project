@@ -1,0 +1,7 @@
+{
+    "step_id": "mysql",
+    "previous_step_id": "pyenv",
+    "metadata": {
+        "description": "ubuntu22 with mysql 8.0.28"
+    }
+}

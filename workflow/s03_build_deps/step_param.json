@@ -1,0 +1,7 @@
+{
+    "step_id": "build_deps",
+    "previous_step_id": "mysql",
+    "metadata": {
+        "description": "ubuntu22 with azerothcore build dependencies. See more details at https://www.azerothcore.org/wiki/linux-requirements"
+    }
+}

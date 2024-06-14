@@ -54,3 +54,5 @@ Welcome to ``acore_ami`` Documentation
     :target: https://acore-ami.readthedocs.io/en/latest/
 
 这个项目用于实现 `azerothcore-wotlk <https://github.com/azerothcore/azerothcore-wotlk>`_ 游戏服务器的 Amazon Machine Image (AMI) 的自动化构建. 它提供了一系列 Python 实现的自动化脚本, 能够使用 `hashicorp packer <https://www.packer.io/>`_ 来自动化构建 AMI. 并且它还提供了一系列维护 AMI Inventory 的小工具.
+
+这个项目使用了 `packer_ami_workflow <https://packer-ami-workflow.readthedocs.io/en/latest/>`_ 框架来实现自动化构建 AMI 的工作流程. 关于目录结构, 自动化脚本的详细说明, 请参考 ``packer_ami_workflow`` 的文档.

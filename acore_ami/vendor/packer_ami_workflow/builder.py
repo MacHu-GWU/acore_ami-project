@@ -310,10 +310,7 @@ class AmiBuilder:
                 "You can only create image when instance is fully stopped!"
             )
 
-        tags = {
-            "Name": self.output_ami_name,
-        }
-        tags.update(self.workflow_param.aws_tags)
+        tags = self.get_ami_aws_tags()
 
         res = self.workflow_param.bsm.ec2_client.create_image(
             InstanceId=instance_id,
@@ -343,14 +340,22 @@ class AmiBuilder:
                 verbose=True,
             )
 
+    def get_ami_aws_tags(self) -> T.Dict[str, str]:
+        tags = {
+            "Name": self.output_ami_name,
+            "packer:base_ami_id": self.source_ami_id,
+            "packer:base_ami_name": self.source_ami_name,
+            "packer:root_base_ami_id": self.workflow_param.root_base_ami_id,
+            "packer:root_base_ami_name": self.workflow_param.root_base_ami_name,
+        }
+        tags.update(self.workflow_param.aws_tags)
+        return tags
+
     @logger.start_and_end(
         msg="tag ami",
     )
     def tag_ami(self) -> str:
-        tags = {
-            "Name": self.output_ami_name,
-        }
-        tags.update(self.workflow_param.aws_tags)
+        tags = self.get_ami_aws_tags()
         ami_id = tag_image(
             ec2_client=self.workflow_param.bsm.ec2_client,
             image_name=self.output_ami_name,

@@ -1,3 +1,5 @@
+Step2 - Install MySQL
+==============================================================================
 Read https://acore-ami.readthedocs.io/en/latest/search.html?q=Step2+Install+MySQL&check_keywords=yes&area=default for details.
 
 MySQL
@@ -87,3 +89,6 @@ Runbook
 - Linux Requirements: https://www.azerothcore.org/wiki/linux-requirements
 - `MySQL Product Archives <https://downloads.mysql.com/archives/community/>`_: MySQL 所有历史版本, 不同 OS, 不同平台的下载链接. 这里我们要选择 MySQL 版本, OS 为 Ubuntu Linux, OS Version 为 20.04. 然后 DEB Bundle 是下面所有组件的打包, 下载这一个就够了.
 - `Installing MySQL on Linux Using Debian Packages from Oracle <https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/linux-installation-debian.html>`_: 这篇是 MySQL 官方文档, 讲述了如何从 debian 的 distribution 包 (源码包) 中为 ubuntu 安装具体版本的 MySQL.
+
+
+See source code at `workflow/s01-pyenv/ <https://github.com/MacHu-GWU/acore_ami-project/blob/main/workflow/s01-pyenv>`_.
