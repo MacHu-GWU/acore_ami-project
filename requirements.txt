@@ -116,9 +116,9 @@ s3pathlib==2.1.2 ; python_version >= "3.10" and python_version < "4.0" \
 s3transfer==0.8.2 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:368ac6876a9e9ed91f6bc86581e319be08188dc60d50e0d56308ed5765446283 \
     --hash=sha256:c9e56cbe88b28d8e197cf841f1f0c130f246595e77ae5b5a05b69fe7cb83de76
-simple-aws-ec2==0.6.2 ; python_version >= "3.10" and python_version < "4.0" \
-    --hash=sha256:41a278df53b3dddab77b4706a77948fd37e258cfd0d4d1d9857df4a57bc3d89b \
-    --hash=sha256:b8a3229d7492834b0dbac9713ee4a807e5bf52cd4d8620a4cd009dd15993dd9b
+simple-aws-ec2==0.7.3 ; python_version >= "3.10" and python_version < "4.0" \
+    --hash=sha256:2322817490251582131b3cb4161ad948a946533af5b0198fdeaf46866131b7e4 \
+    --hash=sha256:3964e519e38d3ec6c327cf5788dc4a9d7c29f1a8260e4d68de01b0f969d81fe3
 six==1.16.0 ; python_version >= "3.10" and python_version < "4.0" \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254

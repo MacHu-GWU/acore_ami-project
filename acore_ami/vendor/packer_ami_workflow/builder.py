@@ -418,9 +418,8 @@ class AmiBuilder:
             raise ValueError(f"AMI {self.output_ami_name} not found.")
 
         logger.info(f"delete AMI {new_image.id}")
-        for dct in new_image.data.get("BlockDeviceMappings", []):
-            snapshot_id = dct.get("Ebs", {}).get("SnapshotId")
-            if snapshot_id:
+        if delete_snapshot:
+            for snapshot_id in new_image.ebs_snapshot_id_list:
                 logger.info(f"delete Snapshot {snapshot_id}")
 
         new_image.deregister(
