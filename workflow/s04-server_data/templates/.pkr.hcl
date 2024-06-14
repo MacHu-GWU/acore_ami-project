@@ -7,9 +7,9 @@ packer {
   }
 }
 
-source "amazon-ebs" "ubuntu20" {
+source "amazon-ebs" "ubuntu" {
   ami_name      = var.output_ami_name
-  instance_type = "t3.large"
+  instance_type = "t3.2xlarge"
   region        = var.aws_region
   ssh_username  = "ubuntu"
 
@@ -57,7 +57,7 @@ source "amazon-ebs" "ubuntu20" {
 build {
   name    = "download server data"
   sources = [
-    "source.amazon-ebs.ubuntu20"
+    "source.amazon-ebs.ubuntu"
   ]
 
   provisioner "shell" {

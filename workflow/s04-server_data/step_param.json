@@ -1,0 +1,7 @@
+{
+    "step_id": "server_data",
+    "previous_step_id": "build_deps",
+    "metadata": {
+        "description": "ubuntu22 with azerothcore server data downloaded and extracted. See more details at https://www.azerothcore.org/wiki/server-setup"
+    }
+}
