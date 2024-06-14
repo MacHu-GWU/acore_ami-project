@@ -1,6 +1,6 @@
-Step4 - Download Server Data
+Step5 - Build Server Core
 ==============================================================================
-See source code at `workflow/s04-server_data/ <https://github.com/MacHu-GWU/acore_ami-project/blob/main/workflow/s04-server_data>`_.
+See source code at `workflow/s05-built_core/ <https://github.com/MacHu-GWU/acore_ami-project/blob/main/workflow/s05-built_core>`_.
 
 
 Overview
