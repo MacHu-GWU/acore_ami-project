@@ -4,5 +4,5 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-pip3.10 install pathlib_mate
-python3.10 /tmp/export_build_deps_versions.py
+pip3.11 install pathlib_mate>=1.3.2,<2.0.0
+python3.11 /tmp/export_build_deps_versions.py
